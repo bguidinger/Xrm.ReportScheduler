@@ -9,4 +9,4 @@ Using this solution, you can create flows like this:
 _Note: this currently only works for custom reports with no parameters._
 
 ## Installation
-Please refer to the installation/configuration procedure [here](./docs/INSTALL).
+Please refer to the installation/configuration procedure [here](./docs/INSTALL.md).
