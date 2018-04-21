@@ -1,0 +1,73 @@
+# Installation
+First, download the files from the [Releases](../../../releases).
+
+## Dynamics 365
+1. Go to Settings > Solutions, click Import.
+ 
+3. Follow the prompts to import the `ReportRenderer_X_X_X_X_managed.zip` file.
+
+3. After the solution is imported, open it up.
+
+4. Go to the Configuration page, set the username/password, and click Submit.  
+![](./ReportRenderer_Solution_Config.png "New Registration")
+
+## Azure AD
+1. Open Azure Active Directory from the [Azure Portal](https://portal.azure.com).
+
+2. Open App registrations.
+
+3. Click the link to add a new application registration.  
+![](./ReportRenderer_Azure_Create.png "New Registration")
+
+4. After the application registration is created, copy the Application ID.
+
+5. Click Settings.
+
+6. Click Reply URLs, add [this](https://msmanaged-na.consent.azure-apim.net/redirect) URL, then click Save.  
+![](./ReportRenderer_Azure_ReplyURLs.png "Reply URL")
+
+7. Add a required permission for Dynamics CRM Online.  After choosing the delegated permission, click Select, and then click Done.  
+![](./ReportRenderer_Azure_Permissions.png "New Registration")
+
+8. Add a new key. After saving, copy the generated Value.  
+![](./ReportRenderer_Azure_Keys.png "Keys")
+
+
+## Flow
+### Create Connector
+1. Create the connector by importing the OpenAPI file.  
+![](./ReportRenderer_Connector_Import.png "Import Connector")
+![](./ReportRenderer_Connector_Create.png "Create Connector")
+
+2. After the import, replace the Host with your Dynamics 365 host.  
+![](./ReportRenderer_Connector_General.png "General")
+
+3. Next, configure Security.  Use the Client ID/Secret from the app registration above.  Also replace the Resource URL.  
+![](./ReportRenderer_Connector_Security.png "Security")
+
+4. Click on the Test link, then click Create Connector.
+
+5. Create a new connection.  
+![](./ReportRenderer_Connector_NewConnection.png "New Connection")
+
+6. After logging in, you will be asked to consent to the permissions.  
+![](./ReportRenderer_Connector_Consent.png "Grant Consent")
+
+7. Finally, test the API call.  
+   _You may get a 404 error.  Wait approximately 30 minutes and try again._
+
+## Create Flow
+1. Create a new blank flow.
+
+2. Add a Schedule trigger.
+
+3. Add the Render Report action and select a report from the list.  
+![](./ReportRenderer_Flow_Reports.png "Report List")
+
+4. Add a Send an Email action.
+
+5. Under advanced options, add an attachment.  You must add an expression to convert Base64 to binary.  
+   The expression should be `base64ToBinary(body('Render_Report')?['Output'])`  
+![](./ReportRenderer_Flow_Content.png "Content Expression")
+
+6. Save and test the flow.
