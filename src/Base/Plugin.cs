@@ -2,16 +2,17 @@
 {
     using Microsoft.Xrm.Sdk;
     using System;
+    using System.Collections.Generic;
 
     public abstract class Plugin : IPlugin
     {
-        public readonly Configuration UnsecureConfig;
-        public readonly Configuration SecureConfig;
+        public readonly Dictionary<string, dynamic> UnsecureConfig;
+        public readonly Dictionary<string, dynamic> SecureConfig;
 
         public Plugin(string unsecureConfig = null, string secureConfig = null)
         {
-            UnsecureConfig = Configuration.Deserialize(unsecureConfig);
-            SecureConfig = Configuration.Deserialize(secureConfig);
+            UnsecureConfig = unsecureConfig.Parse();
+            SecureConfig = secureConfig.Parse();
         }
 
         public void Execute(IServiceProvider serviceProvider)

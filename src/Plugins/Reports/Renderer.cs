@@ -48,7 +48,7 @@
             }
         }
 
-        public Tuple<string, string> GetSession(Guid reportId)
+        public Tuple<string, string> GetSession(Guid reportId, string parameters)
         {
             var url = "/CRMReports/RSViewer/ReportViewer.aspx";
             var data = new Dictionary<string, string>()
@@ -56,6 +56,13 @@
                 ["id"] = reportId.ToString("B"),
                 ["iscustomreport"] = "true"
             };
+            if (!string.IsNullOrEmpty(parameters))
+            {
+                foreach (var parameter in parameters.Parse())
+                {
+                    data.Add($"p:{parameter.Key}", parameter.Value);
+                }
+            }
 
             var response = Encoding.UTF8.GetString(GetResponse(GetRequest("POST", url, data)));
 
@@ -67,7 +74,7 @@
 
         public byte[] Render(Guid reportId, string format, string parameters)
         {
-            var session = GetSession(reportId);
+            var session = GetSession(reportId, parameters);
 
             var url = "/Reserved.ReportViewerWebControl.axd";
             var data = new Dictionary<string, string>()

@@ -9,7 +9,6 @@
     <Import_RootNamespace>BGuidinger.Base</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Configuration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPluginProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Token.cs" />
