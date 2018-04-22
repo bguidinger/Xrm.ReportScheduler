@@ -11,6 +11,8 @@ First, download the files from the [Releases](../../../releases).
 4. Go to the Configuration page, set the username/password, and click Submit.  
 ![](./ReportRenderer_Solution_Config.png "New Registration")
 
+5. Open the `Render` process and activate it.
+
 ## Azure AD
 1. Open Azure Active Directory from the [Azure Portal](https://portal.azure.com).
 
@@ -34,7 +36,6 @@ First, download the files from the [Releases](../../../releases).
 
 
 ## Flow
-### Create Connector
 1. Create the connector by importing the OpenAPI file.  
 ![](./ReportRenderer_Connector_Import.png "Import Connector")
 ![](./ReportRenderer_Connector_Create.png "Create Connector")
@@ -55,19 +56,3 @@ First, download the files from the [Releases](../../../releases).
 
 7. Finally, test the API call.  
    _You may get a 404 error.  Wait approximately 30 minutes and try again._
-
-## Create Flow
-1. Create a new blank flow.
-
-2. Add a Schedule trigger.
-
-3. Add the Render Report action and select a report from the list.  
-![](./ReportRenderer_Flow_Reports.png "Report List")
-
-4. Add a Send an Email action.
-
-5. Under advanced options, add an attachment.  You must add an expression to convert Base64 to binary.  
-   The expression should be `base64ToBinary(body('Render_Report')?['Output'])`  
-![](./ReportRenderer_Flow_Content.png "Content Expression")
-
-6. Save and test the flow.

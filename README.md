@@ -6,7 +6,7 @@ Out of the box, Dynamics 365 does not provide a method to schedule reports.  Thi
 Using this solution, you can create flows like this:  
 ![](./docs/ReportRenderer_Flow_Example.png "Example Flow")
 
-_Note: this currently only works for custom reports with no parameters._
+Available Formats: PDF, CSV, XML, Word, Excel, HTML 5.
 
-## Installation
-Please refer to the installation/configuration procedure [here](./docs/INSTALL.md).
+## Configuration
+Please refer to the [installation](./docs/INSTALL.md) and [usage](./docs/USAGE.md) documentation.
