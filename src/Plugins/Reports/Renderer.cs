@@ -82,11 +82,11 @@
                 ["OpType"] = "Export",
                 ["Format"] = format,
                 ["ContentDisposition"] = "AlwaysAttachment",
-                ["FileName"] = format == "PDF" ? "report.pdf" : "report.xls",
+                ["FileName"] = string.Empty,
                 ["Culture"] = "1033",
-                ["CultureOverrides"] = "True",
+                ["CultureOverrides"] = "False",
                 ["UICulture"] = "1033",
-                ["UICultureOverrides"] = "True",
+                ["UICultureOverrides"] = "False",
                 ["ReportSession"] = session.Item1,
                 ["ControlID"] = session.Item2
             };
@@ -100,7 +100,6 @@
             request.Method = method;
             request.CookieContainer = _cookies;
             request.Headers.Add("Authorization", $"Bearer {_accessToken}");
-            request.AutomaticDecompression = DecompressionMethods.GZip;
 
             if (data != null)
             {
