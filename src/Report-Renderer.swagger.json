@@ -70,8 +70,17 @@
             "type": "string",
             "x-ms-visibility": "internal",
             "default": "reportid,name"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal",
+            "default": "reportnameonsrs eq null"
           }
-        ]
+        ],
+        "x-ms-visibility": "internal"
       }
     },
     "/reports({reportId})/Microsoft.Dynamics.CRM.bg_Render": {
@@ -112,7 +121,8 @@
               "value-collection": "value",
               "value-title": "name",
               "parameters": {
-                "$select": "reportid,name"
+                "$select": "reportid,name",
+                "$filter": "reportnameonsrs eq null"
               }
             }
           },
