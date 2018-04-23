@@ -1,5 +1,7 @@
 # Usage
-## Create Flow
+There are two ways to use the Report Renderer.
+
+## Flow
 1. Create a new blank flow.
 
 2. Add a Schedule trigger.  
@@ -19,3 +21,57 @@
 ![](./ReportRenderer_Flow_Content.png "Content Expression")
 
 7. Save and test the flow.
+
+
+## Action
+You can directly use the action/plugin by calling it through the Web API.
+1. Create the request class.  
+```
+var Sdk = Sdk || {};
+
+Sdk.RenderReportRequest = function (report, format, parameters) {
+  this.entity = {
+    entityType: 'report',
+    id: report
+  };
+  this.Format = format;
+  this.Parameters = JSON.stringify(parameters);
+
+  this.getMetadata = function () {
+    return {
+      boundParameter: 'entity',
+      operationType: 0,
+      operationName: "bg_Render",
+      parameterTypes: {
+        "entity": {
+          "typeName": "Microsoft.Dynamics.CRM.report",
+          "structuralProperty": 5
+        },
+        "Format": {
+          "typeName": "Edm.String",
+          "structuralProperty": 5
+        },
+        "Parameters": {
+          "typeName": "Edm.String",
+          "structuralProperty": 1
+        }
+      }
+    };
+  };
+};
+```
+2. Call it.
+```
+var report = '00000000-0000-0000-0000-000000000000';
+var format = 'PDF';
+var parameters = { Color: '#FF0000' };
+
+var request = new Sdk.RenderReportRequest(report, format, parameters);
+
+Xrm.WebApi.online.execute(request).then(result => {
+    var response = JSON.parse(result.responseText);
+    var output = response.Output;
+
+    console.log(output);
+});
+```
