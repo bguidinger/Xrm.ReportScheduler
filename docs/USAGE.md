@@ -2,6 +2,8 @@
 There are two ways to use the Report Renderer.
 
 ## Flow
+The action can be included in a flow.
+
 1. Create a new blank flow.
 
 2. Add a Schedule trigger.  
@@ -23,8 +25,8 @@ There are two ways to use the Report Renderer.
 7. Save and test the flow.
 
 
-## Action
-You can directly use the action/plugin by calling it through the Web API.
+## Dynamics 365
+You can call the action/plugin directly through the Web API.
 1. Create the request class.  
 ```
 var Sdk = Sdk || {};
@@ -49,7 +51,7 @@ Sdk.RenderReportRequest = function (report, format, parameters) {
         },
         "Format": {
           "typeName": "Edm.String",
-          "structuralProperty": 5
+          "structuralProperty": 1
         },
         "Parameters": {
           "typeName": "Edm.String",
@@ -60,7 +62,7 @@ Sdk.RenderReportRequest = function (report, format, parameters) {
   };
 };
 ```
-2. Call it.
+2. Call it.  
 ```
 var report = '00000000-0000-0000-0000-000000000000';
 var format = 'PDF';
