@@ -9,7 +9,7 @@ The action can be included in a flow.
 2. Add a Schedule trigger.  
 ![](./ReportRenderer_Flow_Schedule.png "Schedule Trigger")
 
-3. Add an Initialize Variable action.  
+3. Add an Initialize Variable action.  The keys must exactly match the names of the parameters on the report.
 ![](./ReportRenderer_Flow_Variable.png "Initialize Variable Action")
 
 

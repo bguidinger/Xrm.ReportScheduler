@@ -142,6 +142,11 @@
         {
             using (var response = request.GetResponse() as HttpWebResponse)
             {
+                if(response.ResponseUri.PathAndQuery.Contains("errorhandler.aspx"))
+                {
+                    throw new Exception("Error executing request.");
+                }
+
                 using (var stream = response.GetResponseStream())
                 using (var stream2 = new MemoryStream())
                 {
