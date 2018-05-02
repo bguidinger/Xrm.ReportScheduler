@@ -7,6 +7,8 @@
     {
         public IPluginExecutionContext ExecutionContext { get; set; }
 
+        public IOrganizationService OrganizationService { get; set; }
+
         public ILoggingService LoggingService { get; set; }
 
         public EntityReference Target { get; set; }
