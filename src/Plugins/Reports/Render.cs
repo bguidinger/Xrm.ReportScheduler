@@ -2,6 +2,7 @@
 {
     using Base;
     using Microsoft.Xrm.Sdk.Extensions;
+    using Microsoft.Xrm.Sdk.Query;
     using System;
 
     public class Render : Plugin
@@ -17,6 +18,7 @@
 
             // Get input parameters
             var reportId = provider.Target.Id;
+            var report = provider.OrganizationService.Retrieve("report", reportId, new ColumnSet("reportnameonsrs", "languagecode"));
             var format = provider.ExecutionContext.InputParameterOrDefault<string>("Format").ToUpper();
             if (format == "WORD" || format == "EXCEL")
             {
@@ -26,10 +28,10 @@
 
             // Render the report
             var renderer = new Renderer(resource, username, password);
-            var report = renderer.Render(reportId, format, parameters);
+            var rendered = renderer.Render(report, format, parameters);
 
             // Return as Base-64
-            provider.ExecutionContext.OutputParameters["Output"] = Convert.ToBase64String(report);
+            provider.ExecutionContext.OutputParameters["Output"] = Convert.ToBase64String(rendered);
         }
     }
 }

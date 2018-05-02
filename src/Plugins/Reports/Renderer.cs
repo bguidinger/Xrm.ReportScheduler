@@ -1,6 +1,7 @@
 ﻿namespace BGuidinger.Reports
 {
     using Base;
+    using Microsoft.Xrm.Sdk;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -48,19 +49,38 @@
             }
         }
 
-        public Tuple<string, string> GetSession(Guid reportId, string parameters)
+        public Tuple<string, string> GetSession(Entity report, string parameters)
         {
+            var name = report.GetAttributeValue<string>("reportnameonsrs");
+            var isCustom = name == null;
+
             var url = "/CRMReports/RSViewer/ReportViewer.aspx";
             var data = new Dictionary<string, string>()
             {
-                ["id"] = reportId.ToString("B"),
-                ["iscustomreport"] = "true"
+                ["id"] = report.Id.ToString("B"),
+                ["iscustomreport"] = isCustom.ToString().ToLower(),
+                ["reportnameonsrs"] = name
             };
+
             if (!string.IsNullOrEmpty(parameters))
             {
-                foreach (var parameter in parameters.Parse())
+                if (isCustom)
                 {
-                    data.Add($"p:{parameter.Key}", parameter.Value);
+                    foreach (var parameter in parameters.Parse())
+                    {
+                        data.Add($"p:{parameter.Key}", parameter.Value);
+                    }
+                }
+                else
+                {
+                    var filter = new StringBuilder();
+                    filter.Append("<ReportFilter>");
+                    foreach (var parameter in parameters.Parse())
+                    {
+                        filter.Append($"<ReportEntity paramname=\"{parameter.Key}\" displayname=\"Accounts\">{parameter.Value}</ReportEntity>");
+                    }
+                    filter.Append("</ReportFilter>");
+                    data.Add("CRM_Filter", filter.ToString());
                 }
             }
 
@@ -72,20 +92,21 @@
             return new Tuple<string, string>(sessionId, controlId);
         }
 
-        public byte[] Render(Guid reportId, string format, string parameters)
+        public byte[] Render(Entity report, string format, string parameters)
         {
-            var session = GetSession(reportId, parameters);
+            var session = GetSession(report, parameters);
 
             var url = "/Reserved.ReportViewerWebControl.axd";
+            var lcid = report.GetAttributeValue<int>("languagecode");
             var data = new Dictionary<string, string>()
             {
                 ["OpType"] = "Export",
                 ["Format"] = format,
                 ["ContentDisposition"] = "AlwaysAttachment",
                 ["FileName"] = string.Empty,
-                ["Culture"] = "1033",
+                ["Culture"] = lcid.ToString(),
                 ["CultureOverrides"] = "False",
-                ["UICulture"] = "1033",
+                ["UICulture"] = lcid.ToString(),
                 ["UICultureOverrides"] = "False",
                 ["ReportSession"] = session.Item1,
                 ["ControlID"] = session.Item2

@@ -5,6 +5,7 @@
     public interface IPluginProvider
     {
         IPluginExecutionContext ExecutionContext { get; }
+        IOrganizationService OrganizationService { get; }
         ILoggingService LoggingService { get; }
 
         EntityReference Target { get; }

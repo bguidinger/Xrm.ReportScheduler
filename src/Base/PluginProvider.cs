@@ -27,6 +27,20 @@
             }
         }
 
+        private IOrganizationService _organizationService;
+        public IOrganizationService OrganizationService
+        {
+            get
+            {
+                if (_organizationService == null)
+                {
+                    _organizationService = _serviceProvider.GetOrganizationService(ExecutionContext.UserId);
+                }
+
+                return _organizationService;
+            }
+        }
+
         private ILoggingService _loggingService;
         public ILoggingService LoggingService
         {
