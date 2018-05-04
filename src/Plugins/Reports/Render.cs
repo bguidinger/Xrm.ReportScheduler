@@ -18,7 +18,8 @@
 
             // Get input parameters
             var reportId = provider.Target.Id;
-            var report = provider.OrganizationService.Retrieve("report", reportId, new ColumnSet("reportnameonsrs", "languagecode"));
+            var reportColumns = new ColumnSet("reportnameonsrs", "languagecode", "defaultfilter");
+            var report = provider.OrganizationService.Retrieve("report", reportId, reportColumns);
             var format = provider.ExecutionContext.InputParameterOrDefault<string>("Format").ToUpper();
             if (format == "WORD" || format == "EXCEL")
             {

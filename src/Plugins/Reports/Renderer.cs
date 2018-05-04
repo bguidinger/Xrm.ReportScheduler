@@ -77,10 +77,18 @@
                     filter.Append("<ReportFilter>");
                     foreach (var parameter in parameters.Parse())
                     {
-                        filter.Append($"<ReportEntity paramname=\"{parameter.Key}\" displayname=\"Accounts\">{parameter.Value}</ReportEntity>");
+                        filter.Append($"<ReportEntity paramname=\"{parameter.Key}\">{parameter.Value}</ReportEntity>");
                     }
                     filter.Append("</ReportFilter>");
                     data.Add("CRM_Filter", filter.ToString());
+                }
+            }
+            else
+            {
+                if (!isCustom)
+                {
+                    var defaultFilter = report.GetAttributeValue<string>("defaultfilter");
+                    data.Add("CRM_Filter", defaultFilter);
                 }
             }
 
@@ -121,6 +129,7 @@
             request.Method = method;
             request.CookieContainer = _cookies;
             request.Headers.Add("Authorization", $"Bearer {_accessToken}");
+            request.AutomaticDecompression = DecompressionMethods.GZip;
 
             if (data != null)
             {
@@ -142,7 +151,7 @@
         {
             using (var response = request.GetResponse() as HttpWebResponse)
             {
-                if(response.ResponseUri.PathAndQuery.Contains("errorhandler.aspx"))
+                if (response.ResponseUri.PathAndQuery.Contains("errorhandler.aspx"))
                 {
                     throw new Exception("Error executing request.");
                 }
