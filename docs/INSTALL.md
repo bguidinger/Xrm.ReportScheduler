@@ -18,41 +18,63 @@ First, download the files from the [Releases](../../../releases).
 
 2. Open App registrations.
 
-3. Click the link to add a new application registration.  
-![](./ReportRenderer_Azure_Create.png "New Registration")
+3. Click the link to add a new application registration.
+
+   ![](./ReportRenderer_Azure_Create.png "New Registration")
 
 4. After the application registration is created, copy the Application ID.
 
 5. Click Settings.
 
-6. Click Reply URLs, add [this](https://msmanaged-na.consent.azure-apim.net/redirect) URL, then click Save.  
-![](./ReportRenderer_Azure_ReplyURLs.png "Reply URL")
+6. Click Reply URLs, add the appropriate one for your region, then click Save.
 
-7. Add a required permission for Dynamics CRM Online.  After choosing the delegated permission, click Select, and then click Done.  
-![](./ReportRenderer_Azure_Permissions.png "New Registration")
+   ![](./ReportRenderer_Azure_ReplyURLs.png "Reply URL")
 
-8. Add a new key. After saving, copy the generated Value.  
-![](./ReportRenderer_Azure_Keys.png "Keys")
+   | Region        | Reply URL                                    |
+   | :------------ |:-------------------------------------------- |
+   | United States | https://msmanaged-na.consent.azure-apim.net  |
+   | Europe        | https://europe-001.consent.azure-apim.net    |
+   | Asia          | https://asia-001.consent.azure-apim.net      |
+   | Australia     | https://australia-001.consent.azure-apim.net |
+   | India         | https://india-001.consent.azure-apim.net     |
+   | Japan         | https://japan-001.consent.azure-apim.net     |
+   | Canada        | https://canada-001.consent.azure-apim.net    |
+   | Brazil        | https://brazil-001.consent.azure-apim.net    |
+
+   
+
+7. Add a required permission for Dynamics CRM Online.  After choosing the delegated permission, click Select, and then click Done.
+
+   ![](./ReportRenderer_Azure_Permissions.png "New Registration")
+
+8. Add a new key. After saving, copy the generated Value.
+
+   ![](./ReportRenderer_Azure_Keys.png "Keys")
 
 
 ## Flow
-1. Create the connector by importing the OpenAPI file.  
-![](./ReportRenderer_Connector_Import.png "Import Connector")
-![](./ReportRenderer_Connector_Create.png "Create Connector")
+1. Create the connector by importing the OpenAPI file.
 
-2. After the import, replace the Host with your Dynamics 365 host.  
-![](./ReportRenderer_Connector_General.png "General")
+   ![](./ReportRenderer_Connector_Import.png "Import Connector")
+   ![](./ReportRenderer_Connector_Create.png "Create Connector")
 
-3. Next, configure Security.  Use the Client ID/Secret from the app registration above.  Also replace the Resource URL.  
-![](./ReportRenderer_Connector_Security.png "Security")
+2. After the import, replace the Host with your Dynamics 365 host.
+
+   ![](./ReportRenderer_Connector_General.png "General")
+
+3. Next, configure Security.  Use the Client ID/Secret from the app registration above.  Also replace the Resource URL.
+
+   ![](./ReportRenderer_Connector_Security.png "Security")
 
 4. Click on the Test link, then click Create Connector.
 
-5. Create a new connection.  
-![](./ReportRenderer_Connector_NewConnection.png "New Connection")
+5. Create a new connection.
 
-6. After logging in, you will be asked to consent to the permissions.  
-![](./ReportRenderer_Connector_Consent.png "Grant Consent")
+   ![](./ReportRenderer_Connector_NewConnection.png "New Connection")
+
+6. After logging in, you will be asked to consent to the permissions.
+
+   ![](./ReportRenderer_Connector_Consent.png "Grant Consent")
 
 7. Finally, test the API call.  
    _You may get a 404 error.  Wait approximately 30 minutes and try again._
