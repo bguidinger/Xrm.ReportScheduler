@@ -75,6 +75,125 @@
         "x-ms-visibility": "internal"
       }
     },
+    "/documenttemplates": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@odata.context": {
+                  "type": "string",
+                  "description": "@odata.context",
+                  "x-ms-summary": "@odata.context"
+                },
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "name",
+                        "x-ms-summary": "name"
+                      },
+                      "documenttemplateid": {
+                        "type": "string",
+                        "description": "documenttemplateid",
+                        "x-ms-summary": "documenttemplateid"
+                      }
+                    }
+                  },
+                  "description": "value",
+                  "x-ms-summary": "value"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Document Templates",
+        "operationId": "/GET/Templates",
+        "parameters": [
+          {
+            "name": "$select",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal",
+            "default": "name"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal",
+            "default": "documenttype eq 0",
+            "description": "",
+            "x-ms-summary": ""
+          }
+        ],
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/savedqueries": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@odata.context": {
+                  "type": "string",
+                  "description": "@odata.context",
+                  "x-ms-summary": "@odata.context"
+                },
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "@odata.etag": {
+                        "type": "string",
+                        "description": "@odata.etag",
+                        "x-ms-summary": "@odata.etag"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "name",
+                        "x-ms-summary": "name"
+                      },
+                      "savedqueryid": {
+                        "type": "string",
+                        "description": "savedqueryid",
+                        "x-ms-summary": "savedqueryid"
+                      }
+                    }
+                  },
+                  "description": "value",
+                  "x-ms-summary": "value"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Views",
+        "operationId": "/GET/SavedQueries",
+        "x-ms-visibility": "internal",
+        "parameters": [
+          {
+            "name": "$select",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "name",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
     "/reports({reportId})/Microsoft.Dynamics.CRM.bg_Render": {
       "post": {
         "responses": {
@@ -93,7 +212,7 @@
                   "description": "Output",
                   "x-ms-summary": "Output",
                   "title": "Output",
-                  "format": "",
+                  "format": "byte",
                   "x-ms-visibility": ""
                 }
               }
@@ -154,8 +273,160 @@
           }
         ],
         "summary": "Render Report",
-        "description": "Renders a report from Dynamics 365",
+        "description": "Renders an SSRS report from Dynamics 365",
         "operationId": "/POST/RenderReport"
+      }
+    },
+    "/documenttemplates({templateId})/Microsoft.Dynamics.CRM.bg_RenderTemplate_Word": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@odata.context": {
+                  "type": "string",
+                  "description": "Context",
+                  "x-ms-summary": "@odata.context",
+                  "title": "Context",
+                  "x-ms-visibility": ""
+                },
+                "Output": {
+                  "type": "string",
+                  "description": "Output",
+                  "x-ms-summary": "Output",
+                  "title": "Output",
+                  "format": "byte",
+                  "x-ms-visibility": ""
+                }
+              }
+            }
+          }
+        },
+        "summary": "Render Template - Word",
+        "operationId": "/POST/RenderTemplate_Word",
+        "parameters": [
+          {
+            "name": "templateId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-dynamic-values": {
+              "operationId": "/GET/Templates",
+              "value-path": "documenttemplateid",
+              "value-collection": "value",
+              "value-title": "name",
+              "parameters": {
+                "$select": "name",
+                "$filter": "documenttype eq 2"
+              }
+            },
+            "x-ms-summary": "Template"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "RecordId": {
+                  "type": "string",
+                  "description": "Record ID",
+                  "x-ms-summary": "RecordId",
+                  "title": "Record ID",
+                  "x-ms-visibility": ""
+                }
+              },
+              "required": [
+                "RecordId"
+              ]
+            }
+          }
+        ],
+        "description": "Renders a Word template from Dynamics 365"
+      }
+    },
+    "/documenttemplates({templateId})/Microsoft.Dynamics.CRM.bg_RenderTemplate_Excel": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@odata.context": {
+                  "type": "string",
+                  "description": "Context",
+                  "x-ms-summary": "@odata.context",
+                  "title": "Context",
+                  "x-ms-visibility": ""
+                },
+                "Output": {
+                  "type": "string",
+                  "description": "Output",
+                  "x-ms-summary": "Output",
+                  "title": "Output",
+                  "format": "byte",
+                  "x-ms-visibility": ""
+                }
+              }
+            }
+          }
+        },
+        "summary": "Render Template - Excel",
+        "operationId": "/POST/RenderTemplate_Excel",
+        "parameters": [
+          {
+            "name": "templateId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-dynamic-values": {
+              "operationId": "/GET/Templates",
+              "value-path": "documenttemplateid",
+              "value-collection": "value",
+              "value-title": "name",
+              "parameters": {
+                "$select": "name",
+                "$filter": "documenttype eq 1"
+              }
+            },
+            "description": "",
+            "x-ms-summary": "Template"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ViewId": {
+                  "type": "string",
+                  "description": "View",
+                  "x-ms-summary": "ViewId",
+                  "title": "View",
+                  "x-ms-visibility": "",
+                  "x-ms-dynamic-values": {
+                    "operationId": "/GET/SavedQueries",
+                    "value-path": "savedqueryid",
+                    "value-collection": "value",
+                    "value-title": "name",
+                    "parameters": {
+                      "$select": "name"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "ViewId"
+              ]
+            }
+          }
+        ],
+        "description": "Renders an Excel template from Dynamics 365"
       }
     }
   },

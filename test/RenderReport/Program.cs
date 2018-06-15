@@ -13,31 +13,52 @@
         {
             TestStandardReport();
             TestCustomReport();
+            TestWordTemplate();
+            TestExcelTemplate();
         }
 
         private static void TestStandardReport()
         {
-            var reportId = new Guid("FCF836BD-C017-E811-A97F-000D3A192387");
+            var report = new EntityReference("report", new Guid("08f936bd-c017-e811-a97f-000d3a192387"));
             var parameters = new ParameterCollection
             {
                 ["Format"] = "PDF",
-                ["Parameters"] = "{\"CRM_FilteredAccount\": \"<fetch version=\\\"1.0\\\" output-format=\\\"xml-platform\\\" mapping=\\\"logical\\\" distinct=\\\"false\\\"><entity name=\\\"account\\\"><all-attributes/><filter type=\\\"and\\\"><condition attribute=\\\"accountid\\\" operator=\\\"eq\\\" uiname=\\\"Al Rossi\\\" uitype=\\\"account\\\" value=\\\"{9C662EA7-4E23-E811-A95D-000D3A109D70}\\\"/></filter></entity></fetch>\"}"
+                ["Parameters"] = "{\"CRM_FilteredSystemUser\": \"<fetch version=\\\"1.0\\\" output-format=\\\"xml-platform\\\" mapping=\\\"logical\\\" distinct=\\\"false\\\"><entity name=\\\"systemuser\\\"><all-attributes /></entity></fetch>\"}"
             };
-            RenderReport(reportId, parameters, "standard.pdf");
+            RenderReport(report, parameters, "standard.pdf");
         }
 
         private static void TestCustomReport()
         {
-            var reportId = new Guid("3485F701-9146-E811-A95F-000D3A109D70");
+            var report = new EntityReference("report", new Guid("3485F701-9146-E811-A95F-000D3A109D70"));
             var parameters = new ParameterCollection
             {
                 ["Format"] = "PDF",
                 ["Parameters"] = "{\"Color\": \"#FFFF00\"}"
             };
-            RenderReport(reportId, parameters, "custom.pdf");
+            RenderReport(report, parameters, "custom.pdf");
         }
 
-        private static void RenderReport(Guid reportId, ParameterCollection parameters, string filename)
+        private static void TestWordTemplate()
+        {
+            var template = new EntityReference("documenttemplate", new Guid("9B77C5B0-1033-4741-A01C-AFDBDB1C3F22"));
+            var parameters = new ParameterCollection
+            {
+                ["RecordId"] = "B5C0BF5E-3A2C-E811-A951-000D3A30D0CA"
+            };
+            RenderReport(template, parameters, "custom.docx");
+        }
+        private static void TestExcelTemplate()
+        {
+            var template = new EntityReference("documenttemplate", new Guid("C6CB7810-1033-47C3-95AA-F0FFF0A8D57D"));
+            var parameters = new ParameterCollection
+            {
+                ["SavedView"] = new EntityReference("savedquery", new Guid("00000000-0000-0000-00AA-000010001030"))
+            };
+            RenderReport(template, parameters, "custom.xlsx");
+        }
+
+        private static void RenderReport(EntityReference target, ParameterCollection parameters, string filename)
         {
             var secure = new Dictionary<string, dynamic>()
             {
@@ -58,7 +79,7 @@
             {
                 ExecutionContext = context,
                 OrganizationService = service,
-                Target = new EntityReference("report", reportId)
+                Target = target
             };
 
             var request = new Render(null, secure.ToJson());

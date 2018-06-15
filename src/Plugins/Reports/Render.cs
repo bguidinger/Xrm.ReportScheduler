@@ -1,6 +1,7 @@
 ﻿namespace BGuidinger.Reports
 {
     using Base;
+    using Microsoft.Xrm.Sdk;
     using Microsoft.Xrm.Sdk.Extensions;
     using Microsoft.Xrm.Sdk.Query;
     using System;
@@ -16,23 +17,49 @@
             var username = SecureConfig.GetValue<string>("username");
             var password = SecureConfig.GetValue<string>("password");
 
-            // Get input parameters
-            var reportId = provider.Target.Id;
-            var reportColumns = new ColumnSet("reportnameonsrs", "languagecode", "defaultfilter");
-            var report = provider.OrganizationService.Retrieve("report", reportId, reportColumns);
-            var format = provider.ExecutionContext.InputParameterOrDefault<string>("Format").ToUpper();
-            if (format == "WORD" || format == "EXCEL")
-            {
-                format = format + "OPENXML";
-            }
-            var parameters = provider.ExecutionContext.InputParameterOrDefault<string>("Parameters");
+            var renderer = new Renderer(resource, username, password);
+
+            var service = provider.OrganizationService;
+            var context = provider.ExecutionContext;
+            var target = provider.Target;
 
             // Render the report
-            var renderer = new Renderer(resource, username, password);
-            var rendered = renderer.Render(report, format, parameters);
+            var output = string.Empty;
+            switch (target.LogicalName)
+            {
+                case "report":
+                    var reportColumns = new ColumnSet("reportnameonsrs", "languagecode", "defaultfilter");
+                    var report = service.Retrieve(target.LogicalName, target.Id, reportColumns);
+                    var format = context.InputParameterOrDefault<string>("Format");
+                    var parameters = context.InputParameterOrDefault<string>("Parameters");
+                    var rendered = renderer.RenderReport(report, format, parameters);
+                    output = Convert.ToBase64String(rendered);
+                    break;
+                case "documenttemplate":
+                    var templateColumns = new ColumnSet("documenttype", "associatedentitytypecode");
+                    var template = service.Retrieve(target.LogicalName, target.Id, templateColumns);
 
+                    switch (template.GetAttributeValue<OptionSetValue>("documenttype")?.Value)
+                    {
+                        case 1:
+                            var savedView = Guid.Parse(context.InputParameterOrDefault<string>("ViewId"));
+                            output = renderer.RenderExcelTemplate(template.Id, savedView);
+                            break;
+                        case 2:
+                            var typeCode = template.GetAttributeValue<string>("associatedentitytypecode");
+                            var metadata = service.GetEntityMetadata(typeCode);
+                            var recordId = Guid.Parse(context.InputParameterOrDefault<string>("RecordId"));
+                            output = renderer.RenderWordTemplate(template.Id, recordId, metadata.ObjectTypeCode ?? 0);
+                            break;
+                        default:
+                            throw new Exception("Invalid document template type.");
+                    }
+                    break;
+                default:
+                    throw new Exception("Invalid input target.");
+            }
             // Return as Base-64
-            provider.ExecutionContext.OutputParameters["Output"] = Convert.ToBase64String(rendered);
+            provider.ExecutionContext.OutputParameters["Output"] = output;
         }
     }
 }

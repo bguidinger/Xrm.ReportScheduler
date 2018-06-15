@@ -53,18 +53,7 @@
             }
         }
 
-        public static void Write(this WebRequest request, Dictionary<string, string> parameters)
-        {
-            var body = Encoding.UTF8.GetBytes(parameters.UrlEncode());
-
-            request.ContentLength = body.Length;
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(body, 0, body.Length);
-            }
-        }
-
-        public static string UrlEncode(this Dictionary<string, string> parameters)
+        public static string UrlEncode(this Dictionary<string, dynamic> parameters)
         {
             return string.Join("&", parameters.Select(x => $"{x.Key}={WebUtility.UrlEncode(x.Value)}"));
         }

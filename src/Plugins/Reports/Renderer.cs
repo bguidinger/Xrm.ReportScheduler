@@ -13,49 +13,135 @@
     {
         private CookieContainer _cookies = new CookieContainer();
 
-        private readonly string _resource;
-        private readonly string _accessToken;
+        private readonly Token _token;
 
         public Renderer(string resource, string username, string password)
         {
-            _resource = resource;
-
-            _accessToken = GetToken(username, password);
+            _token = GetToken(resource, username, password);
         }
 
-        private string GetToken(string username, string password)
+        public byte[] RenderReport(Entity report, string format, string parameters)
+        {
+            var session = GetReportSession(report, parameters);
+
+            var url = "/Reserved.ReportViewerWebControl.axd";
+            var lcid = report.GetAttributeValue<int>("languagecode");
+            format = format.ToUpper();
+            if (format == "WORD" || format == "EXCEL")
+            {
+                format = format + "OPENXML";
+            }
+            var data = new Dictionary<string, dynamic>()
+            {
+                ["OpType"] = "Export",
+                ["Format"] = format,
+                ["ContentDisposition"] = "AlwaysAttachment",
+                ["FileName"] = string.Empty,
+                ["Culture"] = lcid.ToString(),
+                ["CultureOverrides"] = "False",
+                ["UICulture"] = lcid.ToString(),
+                ["UICultureOverrides"] = "False",
+                ["ReportSession"] = session.Item1,
+                ["ControlID"] = session.Item2
+            };
+
+            return GetResponse(GetRequest("GET", $"{url}?{data.UrlEncode()}"));
+        }
+
+        public string RenderExcelTemplate(Guid templateId, Guid viewId)
+        {
+            var url = "/api/data/v9.0/RenderTemplateFromView";
+            var data = "{ \"Template\": { \"@odata.type\": \"Microsoft.Dynamics.CRM.documenttemplate\", \"documenttemplateid\": \"" + templateId.ToString("D") + "\"  }, \"View\": { \"@odata.type\": \"Microsoft.Dynamics.CRM.savedquery\", \"savedqueryid\": \"" + viewId.ToString("D") + "\"  } }";
+
+            var request = GetRequest("POST", url, data, true);
+            try
+            {
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    var body = reader.ReadToEnd().Parse();
+                    return body["ExcelFile"];
+                }
+            }
+            catch (WebException ex)
+            {
+                using (var stream = ex.Response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    Console.Write(reader.ReadToEnd());
+                    throw;
+                }
+            }
+        }
+
+        public string RenderWordTemplate(Guid templateId, Guid entityId, int entityTypeCode)
+        {
+            var url = "/api/data/v9.0/ExportWordDocument";
+            var data = "{ \"EntityTypeCode\": " + entityTypeCode + ", \"SelectedRecords\": \"[ '{" + entityId.ToString("D") + "}' ]\", \"SelectedTemplate\": { \"@odata.type\": \"Microsoft.Dynamics.CRM.documenttemplate\", \"documenttemplateid\": \"" + templateId.ToString("D") + "\" } }";
+
+            var request = GetRequest("POST", url, data, true);
+
+            try
+            {
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    var body = reader.ReadToEnd().Parse();
+                    return body["WordFile"];
+                }
+            }
+            catch (WebException ex)
+            {
+                using (var stream = ex.Response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    Console.Write(reader.ReadToEnd());
+                    throw;
+                }
+            }
+        }
+
+        private Token GetToken(string resource, string username, string password)
         {
             var uri = $"https://login.microsoftonline.com/common/oauth2/token";
 
-            var parameters = new Dictionary<string, string>()
+            var parameters = new Dictionary<string, dynamic>()
             {
                 ["grant_type"] = "password",
                 ["client_id"] = "2ad88395-b77d-4561-9441-d0e40824f9bc",
                 ["username"] = username,
                 ["password"] = password,
-                ["resource"] = _resource,
+                ["resource"] = resource,
             };
             var request = WebRequest.CreateHttp(uri);
             request.Method = "POST";
-            request.Write(parameters);
+            var body = Encoding.ASCII.GetBytes(parameters.UrlEncode());
+
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = body.Length;
+
+            using (var stream = request.GetRequestStream())
+            {
+                stream.Write(body, 0, body.Length);
+            }
 
             using (var response = request.GetResponse())
             using (var stream = response.GetResponseStream())
             {
                 var serializer = new DataContractJsonSerializer(typeof(Token));
-                var token = serializer.ReadObject(stream) as Token;
-
-                return token.AccessToken;
+                return serializer.ReadObject(stream) as Token;
             }
         }
 
-        public Tuple<string, string> GetSession(Entity report, string parameters)
+        private Tuple<string, string> GetReportSession(Entity report, string parameters)
         {
             var name = report.GetAttributeValue<string>("reportnameonsrs");
             var isCustom = name == null;
 
             var url = "/CRMReports/RSViewer/ReportViewer.aspx";
-            var data = new Dictionary<string, string>()
+            var data = new Dictionary<string, dynamic>()
             {
                 ["id"] = report.Id.ToString("B"),
                 ["iscustomreport"] = isCustom.ToString().ToLower(),
@@ -92,7 +178,7 @@
                 }
             }
 
-            var response = Encoding.UTF8.GetString(GetResponse(GetRequest("POST", url, data)));
+            var response = Encoding.UTF8.GetString(GetResponse(GetRequest("POST", url, data.UrlEncode())));
 
             var sessionId = response.Substring(response.LastIndexOf("ReportSession=") + 14, 24);
             var controlId = response.Substring(response.LastIndexOf("ControlID=") + 10, 32);
@@ -100,47 +186,42 @@
             return new Tuple<string, string>(sessionId, controlId);
         }
 
-        public byte[] Render(Entity report, string format, string parameters)
+        private HttpWebRequest GetRequest(string method, string url, string data = null, bool isJson = false)
         {
-            var session = GetSession(report, parameters);
-
-            var url = "/Reserved.ReportViewerWebControl.axd";
-            var lcid = report.GetAttributeValue<int>("languagecode");
-            var data = new Dictionary<string, string>()
-            {
-                ["OpType"] = "Export",
-                ["Format"] = format,
-                ["ContentDisposition"] = "AlwaysAttachment",
-                ["FileName"] = string.Empty,
-                ["Culture"] = lcid.ToString(),
-                ["CultureOverrides"] = "False",
-                ["UICulture"] = lcid.ToString(),
-                ["UICultureOverrides"] = "False",
-                ["ReportSession"] = session.Item1,
-                ["ControlID"] = session.Item2
-            };
-
-            return GetResponse(GetRequest("GET", $"{url}?{data.UrlEncode()}"));
-        }
-
-        private HttpWebRequest GetRequest(string method, string url, Dictionary<string, string> data = null)
-        {
-            var request = WebRequest.CreateHttp($"{_resource}{url}");
+            var request = WebRequest.CreateHttp($"{_token.Resource}{url}");
             request.Method = method;
             request.CookieContainer = _cookies;
-            request.Headers.Add("Authorization", $"Bearer {_accessToken}");
+            if (_token != null)
+            {
+                request.Headers.Add("Authorization", $"Bearer {_token.AccessToken}");
+            }
             request.AutomaticDecompression = DecompressionMethods.GZip;
 
-            if (data != null)
+            if (string.IsNullOrEmpty(data) == false)
             {
-                var body = Encoding.ASCII.GetBytes(data.UrlEncode());
-
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = body.Length;
-
-                using (var stream = request.GetRequestStream())
+                if (isJson)
                 {
-                    stream.Write(body, 0, body.Length);
+                    var body = Encoding.ASCII.GetBytes(data);
+
+                    request.ContentType = "application/json";
+                    request.ContentLength = body.Length;
+
+                    using (var stream = request.GetRequestStream())
+                    {
+                        stream.Write(body, 0, body.Length);
+                    }
+                }
+                else
+                {
+                    var body = Encoding.ASCII.GetBytes(data);
+
+                    request.ContentType = "application/x-www-form-urlencoded";
+                    request.ContentLength = body.Length;
+
+                    using (var stream = request.GetRequestStream())
+                    {
+                        stream.Write(body, 0, body.Length);
+                    }
                 }
             }
 

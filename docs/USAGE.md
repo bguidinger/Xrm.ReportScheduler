@@ -21,8 +21,7 @@ The action can be included in a flow.
 
 5. Add a Send an Email action.
 
-6. Under advanced options, add an attachment.  You must add an expression to convert Base64 to binary.
-   The expression should be `base64ToBinary(body('Render_Report')?['Output'])`
+6. Under advanced options, add an attachment using the Output of the render action.
 
    ![](./ReportRenderer_Flow_Content.png "Content Expression")
 

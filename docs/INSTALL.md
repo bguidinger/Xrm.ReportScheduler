@@ -4,12 +4,13 @@ First, download the files from the [Releases](../../../releases).
 ## Dynamics 365
 1. Go to Settings > Solutions, click Import.
  
-3. Follow the prompts to import the `ReportRenderer_X_X_X_X_managed.zip` file.
+2. Follow the prompts to import the `ReportRenderer_X_X_X_X_managed.zip` file.
 
 3. After the solution is imported, open it up.
 
-4. Go to the Configuration page, set the username/password, and click Submit.  
-![](./ReportRenderer_Solution_Config.png "New Registration")
+4. Go to the Configuration page, set the username/password, and click Submit.
+
+   ![](./ReportRenderer_Solution_Config.png "New Registration")
 
 5. Open the `Render` process and activate it.
 
@@ -22,7 +23,7 @@ First, download the files from the [Releases](../../../releases).
 
    ![](./ReportRenderer_Azure_Create.png "New Registration")
 
-4. After the application registration is created, copy the Application ID.
+4. After the application registration is created, copy the Application ID.  You will use this as the Client ID.
 
 5. Click Settings.
 
@@ -30,16 +31,17 @@ First, download the files from the [Releases](../../../releases).
 
    ![](./ReportRenderer_Azure_ReplyURLs.png "Reply URL")
 
-   | Region        | Reply URL                                    |
-   | :------------ |:-------------------------------------------- |
-   | United States | https://msmanaged-na.consent.azure-apim.net  |
-   | Europe        | https://europe-001.consent.azure-apim.net    |
-   | Asia          | https://asia-001.consent.azure-apim.net      |
-   | Australia     | https://australia-001.consent.azure-apim.net |
-   | India         | https://india-001.consent.azure-apim.net     |
-   | Japan         | https://japan-001.consent.azure-apim.net     |
-   | Canada        | https://canada-001.consent.azure-apim.net    |
-   | Brazil        | https://brazil-001.consent.azure-apim.net    |
+   | Region         | Reply URL                                             |
+   | :------------- |:----------------------------------------------------- |
+   | United States  | https://msmanaged-na.consent.azure-apim.net/redirect  |
+   | Europe         | https://europe-001.consent.azure-apim.net             |
+   | Asia           | https://asia-001.consent.azure-apim.net               |
+   | Australia      | https://australia-001.consent.azure-apim.net          |
+   | India          | https://india-001.consent.azure-apim.net              |
+   | Japan          | https://japan-001.consent.azure-apim.net              |
+   | Canada         | https://canada-001.consent.azure-apim.net             |
+   | Brazil         | https://brazil-001.consent.azure-apim.net             |
+   | United Kingdom | https://uk-001.consent.azure-apim.net                 |
 
    
 
@@ -47,7 +49,7 @@ First, download the files from the [Releases](../../../releases).
 
    ![](./ReportRenderer_Azure_Permissions.png "New Registration")
 
-8. Add a new key. After saving, copy the generated Value.
+8. Add a new key. After saving, copy the generated Value.  You will use this as the Client Secret below.
 
    ![](./ReportRenderer_Azure_Keys.png "Keys")
 
