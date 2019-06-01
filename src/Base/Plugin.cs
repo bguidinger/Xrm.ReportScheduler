@@ -30,8 +30,8 @@
 
                 if (ex is InvalidPluginExecutionException == false)
                 {
-                    throw new InvalidPluginExecutionException("Something went wrong.", ex);
-                }               
+                    throw new InvalidPluginExecutionException($"Something went wrong: {ex.Message}", ex);
+                }
             }
             finally
             {

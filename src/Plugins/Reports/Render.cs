@@ -12,16 +12,37 @@
 
         public override void OnExecute(IPluginProvider provider)
         {
+            if (SecureConfig == null)
+            {
+                throw new ArgumentNullException(nameof(SecureConfig));
+            }
+
             // Get configuration values
             var resource = SecureConfig.GetValue<string>("resource");
+            if (string.IsNullOrEmpty(resource))
+            {
+                throw new ArgumentNullException(nameof(resource));
+            }
             var username = SecureConfig.GetValue<string>("username");
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentNullException(nameof(username));
+            }
             var password = SecureConfig.GetValue<string>("password");
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
 
-            var renderer = new Renderer(resource, username, password);
 
+            // Get services
             var service = provider.OrganizationService;
             var context = provider.ExecutionContext;
             var target = provider.Target;
+            var logger = provider.LoggingService;
+
+            var renderer = new Renderer(logger);
+            renderer.Authenticate(resource, username, password);
 
             // Render the report
             var output = string.Empty;

@@ -61,7 +61,7 @@
         },
         "summary": "Get Reports",
         "description": "Gets all reports from Dynamics 365",
-        "operationId": "/GET/Reports",
+        "operationId": "_GET_Reports",
         "parameters": [
           {
             "name": "$select",
@@ -113,7 +113,7 @@
           }
         },
         "summary": "Get Document Templates",
-        "operationId": "/GET/Templates",
+        "operationId": "_GET_Templates",
         "parameters": [
           {
             "name": "$select",
@@ -180,7 +180,7 @@
           }
         },
         "summary": "Get Views",
-        "operationId": "/GET/SavedQueries",
+        "operationId": "_GET_SavedQueries",
         "x-ms-visibility": "internal",
         "parameters": [
           {
@@ -274,7 +274,7 @@
         ],
         "summary": "Render Report",
         "description": "Renders an SSRS report from Dynamics 365",
-        "operationId": "/POST/RenderReport"
+        "operationId": "_POST_RenderReport"
       }
     },
     "/documenttemplates({templateId})/Microsoft.Dynamics.CRM.bg_RenderTemplate_Word": {
@@ -305,7 +305,7 @@
           }
         },
         "summary": "Render Template - Word",
-        "operationId": "/POST/RenderTemplate_Word",
+        "operationId": "_POST_RenderTemplate_Word",
         "parameters": [
           {
             "name": "templateId",
@@ -376,7 +376,7 @@
           }
         },
         "summary": "Render Template - Excel",
-        "operationId": "/POST/RenderTemplate_Excel",
+        "operationId": "_POST_RenderTemplate_Excel",
         "parameters": [
           {
             "name": "templateId",
@@ -428,6 +428,52 @@
         ],
         "description": "Renders an Excel template from Dynamics 365"
       }
+    },
+    "/reports({reportId})/Microsoft.Dynamics.CRM.bg_Parameters": {
+      "post": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@odata.context": {
+                  "type": "string",
+                  "description": "@odata.context"
+                },
+                "Parameters": {
+                  "type": "string",
+                  "description": "Parameters",
+                  "title": ""
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Report Parameters",
+        "description": "Gets a reports parameters",
+        "operationId": "_POST_GetReportParameters",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-dynamic-values": {
+              "operationId": "_GET_Reports",
+              "value-path": "reportid",
+              "value-collection": "value",
+              "value-title": "name",
+              "parameters": {
+                "$select": {
+                  "parameter": "reportId"
+                }
+              }
+            },
+            "description": "Report ID"
+          }
+        ]
+      }
     }
   },
   "definitions": {},
@@ -437,8 +483,8 @@
     "oauth2_auth": {
       "type": "oauth2",
       "flow": "accessCode",
-      "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
-      "tokenUrl": "https://login.windows.net/common/oauth2/authorize",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "tokenUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
       "scopes": {}
     }
   },

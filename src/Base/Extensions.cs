@@ -57,5 +57,27 @@
         {
             return string.Join("&", parameters.Select(x => $"{x.Key}={WebUtility.UrlEncode(x.Value)}"));
         }
+
+        public static Dictionary<string, string> UrlDecode(this string s)
+        {
+            var values = new Dictionary<string, string>();
+
+            if (s.StartsWith("?")) s = s.Substring(1);
+
+            foreach (var keyValue in s.Split('&'))
+            {
+                var value = keyValue.Split('=');
+                if (value.Length == 2)
+                {
+                    values.Add(WebUtility.UrlDecode(value[0]), WebUtility.UrlDecode(value[1]).Trim());
+                }
+                else
+                {
+                    values.Add(WebUtility.UrlDecode(value[0]), null);
+                }
+            }
+
+            return values;
+        }
     }
 }

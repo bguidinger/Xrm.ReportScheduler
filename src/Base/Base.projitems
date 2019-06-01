@@ -11,6 +11,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPluginProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Report.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ReportParameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Token.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PluginProvider.cs" />

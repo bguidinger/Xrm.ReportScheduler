@@ -13,11 +13,20 @@
     {
         private CookieContainer _cookies = new CookieContainer();
 
-        private readonly Token _token;
+        private readonly ILoggingService _logger;
 
-        public Renderer(string resource, string username, string password)
+        private Token _token;
+
+        public Renderer(ILoggingService logger)
         {
+            _logger = logger;
+        }
+
+        public void Authenticate(string resource, string username, string password)
+        {
+            _logger.Write($"Authenticating....");
             _token = GetToken(resource, username, password);
+            _logger.Write($"Authenticated.");
         }
 
         public byte[] RenderReport(Entity report, string format, string parameters)
@@ -69,7 +78,7 @@
                 using (var stream = ex.Response.GetResponseStream())
                 using (var reader = new StreamReader(stream))
                 {
-                    Console.Write(reader.ReadToEnd());
+                    _logger.Write(reader.ReadToEnd());
                     throw;
                 }
             }
@@ -97,7 +106,7 @@
                 using (var stream = ex.Response.GetResponseStream())
                 using (var reader = new StreamReader(stream))
                 {
-                    Console.Write(reader.ReadToEnd());
+                    _logger.Write(reader.ReadToEnd());
                     throw;
                 }
             }
@@ -150,9 +159,19 @@
 
             if (!string.IsNullOrEmpty(parameters))
             {
+                Dictionary<string, dynamic> parsedParameters;
+                try
+                {
+                    parsedParameters = parameters.Parse();
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Unable to parse report parameters.  Please ensure they are in JSON format.");
+                }
+
                 if (isCustom)
                 {
-                    foreach (var parameter in parameters.Parse())
+                    foreach (var parameter in parsedParameters)
                     {
                         data.Add($"p:{parameter.Key}", parameter.Value);
                     }
@@ -161,7 +180,7 @@
                 {
                     var filter = new StringBuilder();
                     filter.Append("<ReportFilter>");
-                    foreach (var parameter in parameters.Parse())
+                    foreach (var parameter in parsedParameters)
                     {
                         filter.Append($"<ReportEntity paramname=\"{parameter.Key}\">{parameter.Value}</ReportEntity>");
                     }
@@ -180,10 +199,17 @@
 
             var response = Encoding.UTF8.GetString(GetResponse(GetRequest("POST", url, data.UrlEncode())));
 
-            var sessionId = response.Substring(response.LastIndexOf("ReportSession=") + 14, 24);
-            var controlId = response.Substring(response.LastIndexOf("ControlID=") + 10, 32);
+            if (response.Contains("ReportSession=") && response.Contains("ControlID="))
+            {
+                var sessionId = response.Substring(response.LastIndexOf("ReportSession=") + 14, 24);
+                var controlId = response.Substring(response.LastIndexOf("ControlID=") + 10, 32);
 
-            return new Tuple<string, string>(sessionId, controlId);
+                return new Tuple<string, string>(sessionId, controlId);
+            }
+            else
+            {
+                throw new Exception("Error while getting report session.  This is most likely an issue with invalid report parameters.");
+            }
         }
 
         private HttpWebRequest GetRequest(string method, string url, string data = null, bool isJson = false)
@@ -197,6 +223,7 @@
             }
             request.AutomaticDecompression = DecompressionMethods.GZip;
 
+            _logger.Write($"{request.Method} {request.RequestUri.ToString()}");
             if (string.IsNullOrEmpty(data) == false)
             {
                 if (isJson)
@@ -223,6 +250,8 @@
                         stream.Write(body, 0, body.Length);
                     }
                 }
+
+                _logger.Write(data);
             }
 
             return request;
@@ -234,7 +263,18 @@
             {
                 if (response.ResponseUri.PathAndQuery.Contains("errorhandler.aspx"))
                 {
-                    throw new Exception("Error executing request.");
+                    var queryString = response.ResponseUri.Query.UrlDecode();
+
+                    if (queryString.ContainsKey("Parm0"))
+                    {
+                        _logger.Write($"Parm0: {queryString["Parm0"]}");
+                    }
+                    if (queryString.ContainsKey("Parm1"))
+                    {
+                        _logger.Write($"Parm1: {queryString["Parm1"]}");
+                    }
+
+                    throw new Exception($"Error executing web request: {request.RequestUri}");
                 }
 
                 using (var stream = response.GetResponseStream())
