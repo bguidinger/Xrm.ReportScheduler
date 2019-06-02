@@ -9,12 +9,20 @@
 
     class Program
     {
+        private static readonly Dictionary<string, dynamic> SecureConfig = new Dictionary<string, dynamic>()
+        {
+            ["resource"] = "https://organization.crm.dynamics.com",
+            ["username"] = "admin@organization.onmicrosoft.com",
+            ["password"] = "Pass@word!",
+        };
+
         static void Main(string[] args)
         {
             TestStandardReport();
             TestCustomReport();
             TestWordTemplate();
             TestExcelTemplate();
+            TestReportParameters();
         }
 
         private static void TestStandardReport()
@@ -57,34 +65,60 @@
             };
             RenderReport(template, parameters, "custom.xlsx");
         }
+        private static void TestReportParameters()
+        {
+            var report = new EntityReference("report", new Guid("2A167C40-5D4D-E911-A815-000D3A37F60D"));
+            GetReportParameters(report);
+        }
+
+        private static FakeServiceProvider GetServiceProvider()
+        {
+            var connectionString = $"AuthType=Office365; Username={SecureConfig["username"]};Password={SecureConfig["password"]};Url={SecureConfig["resource"]};";
+            var service = new CrmServiceClient(connectionString);
+
+            var serviceProvider = new FakeServiceProvider();
+
+            var factory = new FakeOrganizationServiceFactory(service);
+            serviceProvider.AddService<IOrganizationServiceFactory>(factory);
+
+            var tracing = new FakeTracingService();
+            serviceProvider.AddService<ITracingService>(tracing);
+
+            return serviceProvider;
+        }
 
         private static void RenderReport(EntityReference target, ParameterCollection parameters, string filename)
         {
-            var secure = new Dictionary<string, dynamic>()
+            var serviceProvider = GetServiceProvider();
+
+            parameters.Add("Target", target);
+            var context = new FakePluginExecutionContext
             {
-                ["resource"] = "https://organization.crm.dynamics.com",
-                ["username"] = "admin@organization.onmicrosoft.com",
-                ["password"] = "Pass@word!",
+                InputParameters = parameters,
             };
 
-            var connectionString = $"AuthType=Office365; Username={secure["username"]}; Password={secure["password"]}; Url={secure["resource"]};";
-            var service = new CrmServiceClient(connectionString);
+            serviceProvider.AddService<IPluginExecutionContext>(context);
+
+            var request = new Render(null, SecureConfig.ToJson());
+            request.Execute(serviceProvider);
+            File.WriteAllBytes(filename, Convert.FromBase64String(context.OutputParameters["Output"].ToString()));
+        }
+
+        private static void GetReportParameters(EntityReference report)
+        {
+            var serviceProvider = GetServiceProvider();
 
             var context = new FakePluginExecutionContext
             {
-                InputParameters = parameters
+                PrimaryEntityName = report.LogicalName,
+                PrimaryEntityId = report.Id
             };
+            serviceProvider.AddService<IPluginExecutionContext>(context);
 
-            var provider = new FakePluginProvider
-            {
-                ExecutionContext = context,
-                OrganizationService = service,
-                Target = target
-            };
+            var request = new Parameters(null, SecureConfig.ToJson());
+            request.Execute(serviceProvider);
 
-            var request = new Render(null, secure.ToJson());
-            request.OnExecute(provider);
-            File.WriteAllBytes(filename, Convert.FromBase64String(provider.ExecutionContext.OutputParameters["Output"].ToString()));
+            Console.WriteLine(context.OutputParameters["Parameters"]);
         }
     }
 }

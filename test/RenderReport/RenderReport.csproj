@@ -79,7 +79,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\FakeServiceProvider.cs" />
     <Compile Include="Fakes\FakePluginExecutionContext.cs" />
+    <Compile Include="Fakes\FakeOrganizationServiceFactory.cs" />
+    <Compile Include="Fakes\FakeTracingService.cs" />
     <Compile Include="Fakes\FakePluginProvider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

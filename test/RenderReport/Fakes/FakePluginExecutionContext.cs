@@ -13,7 +13,7 @@
 
         public string MessageName => throw new NotImplementedException();
 
-        public string PrimaryEntityName => throw new NotImplementedException();
+        public string PrimaryEntityName { get; set; }
 
         public string SecondaryEntityName => throw new NotImplementedException();
         public int Stage => throw new NotImplementedException();
@@ -28,7 +28,7 @@
 
         public ParameterCollection SharedVariables => throw new NotImplementedException();
 
-        public Guid UserId => throw new NotImplementedException();
+        public Guid UserId { get; set; } = Guid.Empty;
 
         public Guid InitiatingUserId => throw new NotImplementedException();
 
@@ -38,7 +38,7 @@
 
         public string OrganizationName => throw new NotImplementedException();
 
-        public Guid PrimaryEntityId => throw new NotImplementedException();
+        public Guid PrimaryEntityId { get; set; }
 
         public EntityImageCollection PreEntityImages => throw new NotImplementedException();
 
