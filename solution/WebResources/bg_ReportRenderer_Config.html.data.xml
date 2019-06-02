@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WebResource>
+  <WebResourceId>{16e675b2-e36f-e811-a965-000d3a1a9efb}</WebResourceId>
+  <Name>bg_ReportRenderer_Config.html</Name>
+  <DisplayName>Report Renderer - Config</DisplayName>
+  <WebResourceType>1</WebResourceType>
+  <IntroducedVersion>1.4.0.0</IntroducedVersion>
+  <IsEnabledForMobileClient>0</IsEnabledForMobileClient>
+  <IsAvailableForMobileOffline>0</IsAvailableForMobileOffline>
+  <DependencyXml>&lt;Dependencies&gt;&lt;Dependency componentType="WebResource"/&gt;&lt;/Dependencies&gt;</DependencyXml>
+  <IsCustomizable>1</IsCustomizable>
+  <CanBeDeleted>1</CanBeDeleted>
+  <IsHidden>0</IsHidden>
+  <FileName>/WebResources/bg_ReportRenderer_Confightml16E675B2-E36F-E811-A965-000D3A1A9EFB</FileName>
+</WebResource>

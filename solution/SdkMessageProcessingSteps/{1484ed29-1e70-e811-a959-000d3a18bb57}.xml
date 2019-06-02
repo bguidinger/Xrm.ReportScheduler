@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SdkMessageProcessingStep Name="BGuidinger.Reports.Render: bg_RenderTemplate_Excel of documenttemplate" SdkMessageProcessingStepId="{1484ed29-1e70-e811-a959-000d3a18bb57}">
+  <PluginTypeName>BGuidinger.Reports.Render, BGuidinger.Reports, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8a3bc72dcbb67519</PluginTypeName>
+  <PluginTypeId>a5ccecbc-6f7a-47f4-abed-96433a478978</PluginTypeId>
+  <PrimaryEntity>documenttemplate</PrimaryEntity>
+  <AsyncAutoDelete>0</AsyncAutoDelete>
+  <Description>BGuidinger.Reports.Render: bg_RenderTemplate_Excel of documenttemplate</Description>
+  <FilteringAttributes></FilteringAttributes>
+  <InvocationSource>0</InvocationSource>
+  <Mode>0</Mode>
+  <Rank>1</Rank>
+  <SdkMessageId>{4ff7e798-1c70-e811-a95c-000d3a18b000}</SdkMessageId>
+  <EventHandlerTypeCode>4602</EventHandlerTypeCode>
+  <Stage>40</Stage>
+  <IsCustomizable>1</IsCustomizable>
+  <IsHidden>0</IsHidden>
+  <SupportedDeployment>0</SupportedDeployment>
+  <IntroducedVersion>1.0</IntroducedVersion>
+  <SdkMessageProcessingStepImages />
+</SdkMessageProcessingStep>

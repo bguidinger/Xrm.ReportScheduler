@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Workflow WorkflowId="{f5ea49d0-7010-45a9-aed8-df7f52c5a3a8}" Name="Render Template - Word">
+  <XamlFileName>/Workflows/RenderTemplate-Word-F5EA49D0-7010-45A9-AED8-DF7F52C5A3A8.xaml</XamlFileName>
+  <Type>1</Type>
+  <Subprocess>0</Subprocess>
+  <Category>3</Category>
+  <Mode>0</Mode>
+  <Scope>4</Scope>
+  <OnDemand>0</OnDemand>
+  <TriggerOnCreate>0</TriggerOnCreate>
+  <TriggerOnDelete>0</TriggerOnDelete>
+  <AsyncAutodelete>0</AsyncAutodelete>
+  <SyncWorkflowLogOnFailure>1</SyncWorkflowLogOnFailure>
+  <StateCode>1</StateCode>
+  <StatusCode>2</StatusCode>
+  <CreateStage>40</CreateStage>
+  <RunAs>1</RunAs>
+  <SdkMessageId>{d2983bb1-e46f-e811-a965-000d3a1a9efb}</SdkMessageId>
+  <UniqueName>RenderTemplate_Word</UniqueName>
+  <IsTransacted>1</IsTransacted>
+  <IntroducedVersion>1.4.0.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <FormId>{00000000-0000-0000-0000-000000000000}</FormId>
+  <PrimaryEntity>DocumentTemplate</PrimaryEntity>
+  <LocalizedNames>
+    <LocalizedName languagecode="1033" description="Render Template - Word" />
+  </LocalizedNames>
+</Workflow>
