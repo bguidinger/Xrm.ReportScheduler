@@ -5,6 +5,9 @@
   <IntroducedVersion>1.0</IntroducedVersion>
   <FileName>/PluginAssemblies/BGuidingerReports-0A3C5696-E047-45B2-9E91-87CBD3940198/BGuidingerReports.dll</FileName>
   <PluginTypes>
+    <PluginType AssemblyQualifiedName="BGuidinger.Reports.Parameters, BGuidinger.Reports, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8a3bc72dcbb67519" PluginTypeId="cb2d7306-e7c0-46f4-a3e2-19ee9cc013dc" Name="BGuidinger.Reports.Parameters">
+      <FriendlyName>45cb2e99-a039-401e-807d-6c8ce79f56b6</FriendlyName>
+    </PluginType>
     <PluginType AssemblyQualifiedName="BGuidinger.Reports.Render, BGuidinger.Reports, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8a3bc72dcbb67519" PluginTypeId="a5ccecbc-6f7a-47f4-abed-96433a478978" Name="BGuidinger.Reports.Render">
       <FriendlyName>8c0e22e4-a028-454e-ab41-dfe4d5ac5b2d</FriendlyName>
     </PluginType>

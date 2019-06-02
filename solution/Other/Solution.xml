@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.0.2.193" SolutionPackageVersion="9.0" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.1.0.4834" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>ReportRenderer</UniqueName>
     <LocalizedNames>
       <LocalizedName description="Report Renderer" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.4.0.0</Version>
+    <Version>1.5.0.0</Version>
     <Managed>2</Managed>
     <ConfigurationPage>bg_ReportRenderer_Config.html</ConfigurationPage>
     <Publisher>
@@ -80,6 +80,7 @@
     </Publisher>
     <RootComponents>
       <RootComponent type="29" id="{049ba365-a576-4ddc-b300-bcd60c321d0b}" behavior="0" />
+      <RootComponent type="29" id="{84822dc3-bd31-4450-8216-a421daf58ee6}" behavior="0" />
       <RootComponent type="29" id="{caefe706-4c0a-4e4c-8530-ca8151fe0366}" behavior="0" />
       <RootComponent type="29" id="{f5ea49d0-7010-45a9-aed8-df7f52c5a3a8}" behavior="0" />
       <RootComponent type="61" schemaName="bg_ReportRenderer_Config.html" behavior="0" />
