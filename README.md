@@ -20,3 +20,24 @@ Available Formats: PDF, CSV, XML, Word, Excel, HTML 5.
 
 ## Configuration
 Please refer to the [installation](./docs/INSTALL.md) and [usage](./docs/USAGE.md) documentation.
+
+## Parameters
+In order for the reports to render successfully, you must pass in the proper parameters (if the report requires them).  If you pass in invalid parameters, you will get an error.
+
+Parameters are passed in as a JSON object where the keys are the parameter names.  If the report has default parameters defined, you do not need to pass in the parameters.
+
+### Out-of-the-box Reports
+These reports use FetchXML for the report parameters.  The parameter names generally follow a format of `CRM_Filtered{Entity}` where `{Entity}` is the "Logical Name" of the entity the report is based on.
+
+Here's an example from the "User Summary" report. Note that the FetchXML has the quotes escaped.
+```
+{
+  "CRM_FilteredSystemUser": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\"><entity name=\"systemuser\"><all-attributes /></entity></fetch>"
+}
+```
+
+### Report Wizard
+These reports are effectively the same as the out-of-the-box reports.  See the previous section.
+
+### Custom Reports
+These are reports created through Visual Studio/BIDS.  Because they are custom, the parameters will depend on how the report author configured the report.  In the screenshot above, the "Weekly Report" has a custom parameter named "Color".
