@@ -227,7 +227,7 @@
             "type": "string",
             "x-ms-summary": "Report",
             "x-ms-dynamic-values": {
-              "operationId": "/GET/Reports",
+              "operationId": "_GET_Reports",
               "value-path": "reportid",
               "value-collection": "value",
               "value-title": "name",
@@ -313,7 +313,7 @@
             "required": true,
             "type": "string",
             "x-ms-dynamic-values": {
-              "operationId": "/GET/Templates",
+              "operationId": "_GET_Templates",
               "value-path": "documenttemplateid",
               "value-collection": "value",
               "value-title": "name",
@@ -384,7 +384,7 @@
             "required": true,
             "type": "string",
             "x-ms-dynamic-values": {
-              "operationId": "/GET/Templates",
+              "operationId": "_GET_Templates",
               "value-path": "documenttemplateid",
               "value-collection": "value",
               "value-title": "name",
@@ -410,7 +410,7 @@
                   "title": "View",
                   "x-ms-visibility": "",
                   "x-ms-dynamic-values": {
-                    "operationId": "/GET/SavedQueries",
+                    "operationId": "_GET_SavedQueries",
                     "value-path": "savedqueryid",
                     "value-collection": "value",
                     "value-title": "name",
@@ -483,8 +483,8 @@
     "oauth2_auth": {
       "type": "oauth2",
       "flow": "accessCode",
-      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
-      "tokenUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "authorizationUrl": "https://login.windows.net/common/oauth2/authorize",
+      "tokenUrl": "https://login.windows.net/common/oauth2/authorize",
       "scopes": {}
     }
   },
