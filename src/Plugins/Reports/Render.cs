@@ -64,6 +64,7 @@
                     {
                         case 1:
                             var savedView = Guid.Parse(context.InputParameterOrDefault<string>("ViewId"));
+                            var callerId = context.InputParameterOrDefault<string>("CallerId");
                             output = renderer.RenderExcelTemplate(template.Id, savedView);
                             break;
                         case 2:
