@@ -57,12 +57,12 @@
             return GetResponse(GetRequest("GET", $"{url}?{data.UrlEncode()}"));
         }
 
-        public string RenderExcelTemplate(Guid templateId, Guid viewId)
+        public string RenderExcelTemplate(Guid templateId, Guid viewId, string callerId)
         {
             var url = "/api/data/v9.0/RenderTemplateFromView";
             var data = "{ \"Template\": { \"@odata.type\": \"Microsoft.Dynamics.CRM.documenttemplate\", \"documenttemplateid\": \"" + templateId.ToString("D") + "\"  }, \"View\": { \"@odata.type\": \"Microsoft.Dynamics.CRM.savedquery\", \"savedqueryid\": \"" + viewId.ToString("D") + "\"  } }";
 
-            var request = GetRequest("POST", url, data, true);
+            var request = GetRequest("POST", url, data, true, callerId);
             try
             {
                 using (var response = request.GetResponse())
@@ -212,7 +212,7 @@
             }
         }
 
-        private HttpWebRequest GetRequest(string method, string url, string data = null, bool isJson = false)
+        private HttpWebRequest GetRequest(string method, string url, string data = null, bool isJson = false, string callerId = null)
         {
             var request = WebRequest.CreateHttp($"{_token.Resource}{url}");
             request.Method = method;
@@ -220,6 +220,10 @@
             if (_token != null)
             {
                 request.Headers.Add("Authorization", $"Bearer {_token.AccessToken}");
+            }
+            if (callerId != null)
+            {
+                request.Headers.Add("MSCRMCallerID", $"{callerId}");
             }
             request.AutomaticDecompression = DecompressionMethods.GZip;
 
@@ -251,7 +255,7 @@
                     }
                 }
 
-                _logger.Write(data);
+                //_logger.Write(data);
             }
 
             return request;
