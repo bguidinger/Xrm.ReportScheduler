@@ -255,7 +255,7 @@
                     }
                 }
 
-                //_logger.Write(data);
+                _logger.Write(data);
             }
 
             return request;
