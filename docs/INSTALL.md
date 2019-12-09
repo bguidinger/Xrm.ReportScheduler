@@ -15,56 +15,38 @@ First, download the files from the [Releases](../../../releases).
 5. Open the `Render` process and activate it.
 
 ## Azure AD
-1. Open Azure Active Directory from the [Azure Portal](https://portal.azure.com).
+1. Open Azure Active Directory blade from the [Azure Portal](https://portal.azure.com).
 
 2. Open App registrations.
 
-3. Click the link to add a new application registration.
+3. Click the link for "+ New Registration" to add a new application registration.  Give the registration any name, and set the Redirect URI to `https://global.consent.azure-apim.net/redirect`.
 
    ![](./ReportRenderer_Azure_Create.png "New Registration")
 
-4. After the application registration is created, copy the Application ID.  You will use this as the Client ID.
+4. Copy the `Application (client) ID`.  You will use this as the Client ID in Power Automate.
 
-5. Click Settings.
+5. Click on `Certificates & secrets` and add a `New client secret`. Give it any `Description` and click `Add`.  After saving, copy the generated value.  You will use this as the Client Secret in Power Automate.
 
-6. Click Reply URLs, add the appropriate one for your region, then click Save.
+   ![](./ReportRenderer_Azure_Keys.png "New Client Secret")
 
-   ![](./ReportRenderer_Azure_ReplyURLs.png "Reply URL")
+6. Click on `API permissions` and `Add a permission`. Find `Dynamics CRM` in the list and add the `user_impersonation` permission.
 
-   | Region         | Reply URL                                             |
-   | :------------- |:----------------------------------------------------- |
-   | United States  | https://msmanaged-na.consent.azure-apim.net/redirect  |
-   | Europe         | https://europe-001.consent.azure-apim.net             |
-   | Asia           | https://asia-001.consent.azure-apim.net               |
-   | Australia      | https://australia-001.consent.azure-apim.net          |
-   | India          | https://india-001.consent.azure-apim.net              |
-   | Japan          | https://japan-001.consent.azure-apim.net              |
-   | Canada         | https://canada-001.consent.azure-apim.net             |
-   | Brazil         | https://brazil-001.consent.azure-apim.net             |
-   | United Kingdom | https://uk-001.consent.azure-apim.net                 |
-
-   
-
-7. Add a required permission for Dynamics CRM Online.  After choosing the delegated permission, click Select, and then click Done.
-
-   ![](./ReportRenderer_Azure_Permissions.png "New Registration")
-
-8. Add a new key. After saving, copy the generated Value.  You will use this as the Client Secret below.
-
-   ![](./ReportRenderer_Azure_Keys.png "Keys")
+   ![](./ReportRenderer_Azure_Permissions.png "API Permissions")
 
 
-## Flow
-1. Create the connector by importing the OpenAPI file.
+
+
+## Power Automate
+1. Click on the settings wheel at the top, and click `Custom Connectors`.  Under `+ New custom connector` click `Import an OpenAPI file`.
 
    ![](./ReportRenderer_Connector_Import.png "Import Connector")
    ![](./ReportRenderer_Connector_Create.png "Create Connector")
 
-2. After the import, replace the Host with your Dynamics 365 host.
+2. On the next screen, replace the `Host` with your Dynamics 365 host.
 
    ![](./ReportRenderer_Connector_General.png "General")
 
-3. Next, configure Security.  Use the Client ID/Secret from the app registration above.  Also replace the Resource URL.
+3. Next, configure Security.  Use the Client ID/Secret values you copied from the Azure AD app registration.  Also replace the Resource URL.
 
    ![](./ReportRenderer_Connector_Security.png "Security")
 
@@ -78,5 +60,5 @@ First, download the files from the [Releases](../../../releases).
 
    ![](./ReportRenderer_Connector_Consent.png "Grant Consent")
 
-7. Finally, test the API call.  
+7. Finally, test an API call.  
    _You may get a 404 error.  Wait approximately 30 minutes and try again._

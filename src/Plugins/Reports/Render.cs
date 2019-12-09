@@ -60,18 +60,19 @@
                     var templateColumns = new ColumnSet("documenttype", "associatedentitytypecode");
                     var template = service.Retrieve(target.LogicalName, target.Id, templateColumns);
 
+                    var callerId = context.InputParameterOrDefault<string>("CallerId");
+
                     switch (template.GetAttributeValue<OptionSetValue>("documenttype")?.Value)
                     {
                         case 1:
                             var savedView = Guid.Parse(context.InputParameterOrDefault<string>("ViewId"));
-                            var callerId = context.InputParameterOrDefault<string>("CallerId");
-                            output = renderer.RenderExcelTemplate(template.Id, savedView);
+                            output = renderer.RenderExcelTemplate(template.Id, savedView, callerId);
                             break;
                         case 2:
                             var typeCode = template.GetAttributeValue<string>("associatedentitytypecode");
                             var metadata = service.GetEntityMetadata(typeCode);
                             var recordId = Guid.Parse(context.InputParameterOrDefault<string>("RecordId"));
-                            output = renderer.RenderWordTemplate(template.Id, recordId, metadata.ObjectTypeCode ?? 0);
+                            output = renderer.RenderWordTemplate(template.Id, recordId, metadata.ObjectTypeCode ?? 0, callerId);
                             break;
                         default:
                             throw new Exception("Invalid document template type.");

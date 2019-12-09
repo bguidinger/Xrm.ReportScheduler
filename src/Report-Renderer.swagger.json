@@ -337,6 +337,12 @@
                   "x-ms-summary": "RecordId",
                   "title": "Record ID",
                   "x-ms-visibility": ""
+                },
+                "CallerId": {
+                  "type": "string",
+                  "description": "Id of the user to impersonate.",
+                  "title": "Caller",
+                  "x-ms-summary": "CallerId"
                 }
               },
               "required": [
@@ -421,8 +427,9 @@
                 },
                 "CallerId": {
                   "type": "string",
-                  "description": "CallerId",
-                  "title": "CallerId"
+                  "description": "Id of the user to impersonate.",
+                  "title": "Caller",
+                  "x-ms-summary": "CallerId"
                 }
               },
               "required": [

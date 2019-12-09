@@ -84,12 +84,12 @@
             }
         }
 
-        public string RenderWordTemplate(Guid templateId, Guid entityId, int entityTypeCode)
+        public string RenderWordTemplate(Guid templateId, Guid entityId, int entityTypeCode, string callerId)
         {
             var url = "/api/data/v9.0/ExportWordDocument";
             var data = "{ \"EntityTypeCode\": " + entityTypeCode + ", \"SelectedRecords\": \"[ '{" + entityId.ToString("D") + "}' ]\", \"SelectedTemplate\": { \"@odata.type\": \"Microsoft.Dynamics.CRM.documenttemplate\", \"documenttemplateid\": \"" + templateId.ToString("D") + "\" } }";
 
-            var request = GetRequest("POST", url, data, true);
+            var request = GetRequest("POST", url, data, true, callerId);
 
             try
             {
@@ -221,7 +221,7 @@
             {
                 request.Headers.Add("Authorization", $"Bearer {_token.AccessToken}");
             }
-            if (callerId != null)
+            if (string.IsNullOrEmpty(callerId))
             {
                 request.Headers.Add("MSCRMCallerID", $"{callerId}");
             }
