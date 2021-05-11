@@ -1,5 +1,15 @@
 # Report Renderer
 
+## Archived
+
+This solution is no longer the recommended approach.  Please use a Power BI Premium (per user or per capacity) license to create a Paginated Report connected to Dataverse which can be scheduled.  Please see these links for more information.
+
+- https://docs.microsoft.com/en-us/power-bi/admin/service-premium-per-user-faq
+- https://docs.microsoft.com/en-us/power-bi/paginated-reports/paginated-reports-data-sources
+- https://docs.microsoft.com/en-us/power-bi/consumer/paginated-reports-subscriptions
+
+-----
+
 ## Overview
 Out of the box, Dynamics 365 does not provide a method to schedule reports.
 
